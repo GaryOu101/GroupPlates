@@ -1,35 +1,77 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 
+import firebase from "firebase/compat/app";
+import "firebase/compat/firestore";
+import "firebase/compat/auth";
+
+import {useAuthState} from "react-firebase-hooks/auth";
+import {useCollectionData} from "react-firebase-hooks/firestore";
+
+firebase.initializeApp(
+  {
+    apiKey: "AIzaSyC8YrByYYCZdZSOenI3TieRGYWW-B7ClO0",
+    authDomain: "groupplates.firebaseapp.com",
+    projectId: "groupplates",
+    storageBucket: "groupplates.appspot.com",
+    messagingSenderId: "816422539554",
+    appId: "1:816422539554:web:ef0da905b330a6c9d2157b",
+    measurementId: "G-852P55N5C4"
+  }
+);
+
+const auth = firebase.auth();
+const firestore = firebase.firestore();
+
 function App() {
-  const [count, setCount] = useState(0)
+
+  const [user] = useAuthState(auth)
+  const [preference, setPreference] = useState("");
+
+  const submitPreference = (event) => {
+    event.preventdefault();
+
+  }
+
+  const inputChange = (event) => {
+
+  }
+
 
   return (
     <>
       <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        {user ? <Form onSubmit={submitPreference} inputChange={inputChange}/> : <Signin/>}
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
   )
 }
 
 export default App
+
+function Signin(){
+  const signInWithGoogle = () => {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    auth.signInWithPopup(provider);
+  }
+
+  return (
+    <div>
+      <button onClick={signInWithGoogle}>Sign in here</button>
+    </div>
+  );
+}
+
+function Form(){
+
+  return (
+    <form>
+      <input type='text' id='cuisine' onSubmit={storeData}></input>
+      <button type='submit'>Submit Preference</button>
+    </form>
+  );
+}
+
+function storeData(){
+  console.log("yo");
+}
