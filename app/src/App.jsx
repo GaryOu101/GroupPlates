@@ -41,7 +41,7 @@ function App() {
   return (
     <>
       <div>
-        {user ? <Form onSubmit={submitPreference} inputChange={inputChange}/> : <Signin/>}
+        {user ? <CuisineSearch onSubmit={submitPreference} inputChange={inputChange}/> : <Signin/>}
       </div>
     </>
   )
@@ -71,6 +71,43 @@ function Form(){
     </form>
   );
 }
+
+const cuisines = [
+  { id: 1, name: 'Italian' },
+  { id: 2, name: 'Mexican' },
+  { id: 3, name: 'Chinese' },
+  { id: 4, name: 'Indian' },
+  { id: 5, name: 'Japanese' },
+  { id: 6, name: 'American'}
+  // ... add more cuisines
+];
+
+const CuisineSearch = () => {
+  const [query, setQuery] = useState('');
+
+  const filteredCuisines = cuisines.filter((cuisine) =>
+    cuisine.name.toLowerCase().includes(query.toLowerCase())
+  );
+
+  return (
+    <div className="App">
+      <h1>Search for Cuisine</h1>
+      <input
+        type="text"
+        placeholder="Enter cuisines..."
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+      />
+      <ul>
+        {filteredCuisines.map((cuisine) => (
+          <li key={cuisine.id}>{cuisine.name}</li>
+        ))}
+      </ul>
+    </div>
+  );
+};
+
+
 
 function storeData(){
   console.log("yo");
